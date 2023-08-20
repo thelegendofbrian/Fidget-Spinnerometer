@@ -15,13 +15,6 @@ count = 0
 display = tm1637.TM1637Decimal(clk=machine.Pin(26), dio=machine.Pin(27))
 display.write([0, 0, 0, 0])
 
-# Debug loop
-# while True:
-#     val = photo_pin.read_u16()
-#     print(val)
-#     display.number(int(round(val/1000,0)))
-#     time.sleep(0.2)
-
 while True:
     val[0] = photo_pin.read_u16()
     time.sleep(SAMP_RATE)
@@ -29,17 +22,14 @@ while True:
     # Going up
     if (val[0] < val[1]):
         if (not up):
-            print(val, "bottom")
             up = True
             min = val[0]
     # Going down
     elif (val[0] > val[1]):
         if (up):
-            print(val, "top")
             count = count + 1
             up = False
             max = val[0]
-    # print("count", count, "diff", abs(max - min))
     if (abs(max - min) > NOISE_THRESHOLD):
         if (count == SAMP_SIZE * NUM_SPOKES):
             count = 0
